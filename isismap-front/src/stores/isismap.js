@@ -1,5 +1,29 @@
 import { defineStore } from 'pinia'
 
+const mapApiLocationToSalleId = (location) => {
+  const rawLocation = String(location || '').trim()
+  if (!rawLocation) return 'INCONNU'
+
+  const normalizedLocation = rawLocation
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+
+  const isAuditorium = normalizedLocation.includes('auditorium') || normalizedLocation.includes('amphi')
+  if (isAuditorium && normalizedLocation.includes('grand')) return 'GrandAmphi'
+  if (isAuditorium && normalizedLocation.includes('petit')) return 'PetitAmphi'
+
+  const bCode = normalizedLocation.match(/\bb\d{3}a?\b/)
+  if (bCode) {
+    const upperCode = bCode[0].toUpperCase()
+    return upperCode.endsWith('A') ? `${upperCode.slice(0, -1)}a` : upperCode
+  }
+
+  if (normalizedLocation.includes('chl')) return 'CHL'
+
+  return rawLocation
+}
+
 //  NOTRE MAGASIN DE DONNÉES PINIA ---
 export const useIsismapStore = defineStore('isismap', {
   state: () => ({
@@ -43,7 +67,7 @@ export const useIsismapStore = defineStore('isismap', {
         const data = await response.json()
         this.creneaux = data.map((c) => ({
           id: c.id,
-          id_salle: c.location,
+          id_salle: mapApiLocationToSalleId(c.location),
           id_prom: c.classe || 'INCONNU',
           enseignant: c.professor || 'Non renseigné',
           debut: c.startTime,
