@@ -1,0 +1,37 @@
+
+:root {
+  --color-primary: #7c50dc; /* Violet principal */
+  --color-primary-dark: #2f0d73; /* Violet fonce */
+  --color-secondary: #ac54c7; /* Rose/Violet */
+  --color-accent: #f26958; /* Corail */
+  --color-yellow: #f5a028; /* Jaune/Orange */
+  --color-teal: #3cbebe; /* Cyan/Turquoise */
+
+  /* Couleurs de base de l'interface */
+  --bg-color: #f4f5f7; /* Gris très clair pour le fond */
+  --text-color: #333333;
+  --card-bg: #ffffff;
+}
+
+body {
+  margin: 0;
+  font-family: 'Arial', sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+
+.btn {
+  background-color: var(--color-primary);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.2s;
+}
+
+.btn:hover {
+  background-color: var(--color-primary-dark);
+}
