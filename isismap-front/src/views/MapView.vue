@@ -9,6 +9,9 @@
         </label>
         <span>Le <input type="date" v-model="selectedDate" :disabled="isNowActive" /></span>
         <span>à <input type="time" v-model="selectedTime" :disabled="isNowActive" /></span>
+        <button class="btn-refresh" @click="refreshFromIcal" :disabled="isRefreshingFromIcal">
+          {{ isRefreshingFromIcal ? 'Actualisation... (prends 1mn~)' : 'Actualiser' }}
+        </button>
       </div>
 
       <div class="date-controls" v-else>
@@ -141,6 +144,7 @@ const fermerModale = () => {
 const currentView = ref('jour')
 const selectedDate = ref('')
 const selectedTime = ref('')
+const isRefreshingFromIcal = ref(false)
 
 const isNowActive = ref(true) 
 let intervalTimer = null 
@@ -149,6 +153,20 @@ const updateToNow = () => {
   const current = new Date()
   selectedDate.value = current.toISOString().split('T')[0]
   selectedTime.value = current.toTimeString().slice(0, 5)
+}
+
+const refreshFromIcal = async () => {
+  if (isRefreshingFromIcal.value) return
+
+  isRefreshingFromIcal.value = true
+  try {
+    await store.importIcalCreneaux(true)
+    await store.fetchCreneaux()
+  } catch (error) {
+    store.creneauxError = error.message || 'Impossible d\'actualiser les données'
+  } finally {
+    isRefreshingFromIcal.value = false
+  }
 }
 
 watch(isNowActive, (isActive) => {
@@ -202,8 +220,22 @@ const getSalle = (id) => store.salles.find(s => s.id === id) || { id, libelle: i
 }
 
 .toolbar { display: flex; justify-content: space-between; background-color: white; padding: 1rem; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); flex-shrink: 0; }
-.toggle-realtime { display: flex; align-items: center; gap: 8px; font-weight: bold; color: var(--color-primary); cursor: pointer; margin-right: 15px; background: rgba(124, 80, 220, 0.1); padding: 5px 10px; border-radius: 6px; }
+.date-controls { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
+.toggle-realtime { display: inline-flex; align-items: center; gap: 8px; font-weight: bold; color: var(--color-primary); cursor: pointer; margin-right: 0; background: rgba(124, 80, 220, 0.1); padding: 5px 10px; border-radius: 6px; }
 .toggle-realtime input { cursor: pointer; width: 16px; height: 16px; }
+.btn-refresh {
+  padding: 0.35rem 0.75rem;
+  border: 1px solid var(--color-primary);
+  border-radius: 6px;
+  background-color: white;
+  color: var(--color-primary);
+  font-weight: 600;
+  cursor: pointer;
+}
+.btn-refresh:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
 .date-controls input, .view-controls select { padding: 0.3rem; margin-left: 0.5rem; border: 1px solid #ccc; border-radius: 4px; }
 .date-controls input:disabled { background-color: #f5f5f5; color: #999; border-color: #e0e0e0; cursor: not-allowed; }
 

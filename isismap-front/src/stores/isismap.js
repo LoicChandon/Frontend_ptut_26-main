@@ -54,6 +54,16 @@ export const useIsismapStore = defineStore('isismap', {
     creneauxError: null
   }),
   actions: {
+    async importIcalCreneaux(replaceExisting = true) {
+      const response = await fetch(`/api/creneaux/import-ical?replaceExisting=${replaceExisting}`, {
+        method: 'POST'
+      })
+
+      if (!response.ok) {
+        throw new Error(`Erreur import iCal ${response.status}`)
+      }
+    },
+
     async fetchCreneaux() {
       this.isLoadingCreneaux = true
       this.creneauxError = null
