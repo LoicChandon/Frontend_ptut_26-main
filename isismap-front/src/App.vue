@@ -10,6 +10,7 @@
       <nav class="nav-menu">
         <router-link to="/map" class="nav-link">Carte</router-link>
         <router-link to="/stats" class="nav-link">Statistiques</router-link>
+        <router-link to="/admin" class="nav-link">Admin iCal</router-link>
       </nav>
     </header>
 

@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
 import MapView from '../views/MapView.vue'
+import AdminView from '../views/AdminView.vue'
 import StatsView from '../views/StatsView.vue'
 
 const router = createRouter({
@@ -19,9 +19,13 @@ const router = createRouter({
       path: '/stats',
       name: 'stats',
       component: StatsView
+    },
+    {
+      path: '/admin',
+      name: 'admin',
+      component: AdminView
     }
   ]
 })
 
-// C'EST CETTE LIGNE QUI MANQUAIT PROBABLEMENT ! 👇
 export default router
