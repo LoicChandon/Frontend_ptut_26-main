@@ -1,0 +1,20 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: frontendisismap-ingress
+  annotations:
+    cert-manager.io/cluster-issuer: letsencryptcluster
+spec:
+  rules:
+    - host: df
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: frontendisismap-service
+                port:
+                  number: 80
+  tls:
+    - secretName: wildcard-chl

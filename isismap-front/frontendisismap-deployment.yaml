@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontendisismap-deployment
+  labels:
+    app: frontend
+spec: # ici commence la spécification du ReplicaSet
+  replicas: 1 # nombre d'exemplaires du pod à lancer
+  selector:
+    matchLabels:
+      app: frontend # le replicatSet s'occupe des pods ayant le label "frontend"
+  template: # ici commence la spécification du pod
+    metadata:
+      labels:
+        app: frontend # le label doit correspondre à celui du ReplicaSet
+    spec:
+      containers:
+      - name: frontend
+        image: registry.gitlab.com/loicchandon1/frontend_ptut_26-main:latest
+        ports:
+        - containerPort: 8080 # port sur lequel écoute le conteneur
+      imagePullSecrets:
+      - name: frontregcred
