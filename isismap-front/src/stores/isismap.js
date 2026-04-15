@@ -24,16 +24,6 @@ const mapApiLocationToSalleId = (location) => {
   return rawLocation
 }
 
-const normalizeApiDate = (value) => {
-  if (!value) return null
-
-  const rawValue = String(value).trim()
-  const hasTimezone = /(?:Z|[+-]\d{2}:\d{2})$/i.test(rawValue)
-
-  // Si l'API renvoie un datetime sans fuseau, on l'interprète comme UTC.
-  return hasTimezone ? rawValue : `${rawValue}Z`
-}
-
 //  NOTRE MAGASIN DE DONNÉES PINIA ---
 export const useIsismapStore = defineStore('isismap', {
   state: () => ({
@@ -90,8 +80,8 @@ export const useIsismapStore = defineStore('isismap', {
           id_salle: mapApiLocationToSalleId(c.location),
           id_prom: c.classe || 'INCONNU',
           enseignant: c.professor || 'Non renseigné',
-          debut: normalizeApiDate(c.startTime),
-          fin: normalizeApiDate(c.endTime)
+          debut: c.startTime,
+          fin: c.endTime
         }))
       } catch (error) {
         this.creneauxError = error.message || 'Impossible de charger les créneaux'
